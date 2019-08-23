@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { MenuComponent } from './menu/menu.component';
 import { AccountComponent } from './account/account.component';
-
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -16,12 +16,14 @@ import { AccountComponent } from './account/account.component';
     LoginComponent,
     MenuComponent,
     AccountComponent,
+   
   
   ],
   imports: [
     FormsModule,
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
