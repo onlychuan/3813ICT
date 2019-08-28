@@ -9,6 +9,8 @@ import { MenuComponent } from './menu/menu.component';
 import { AccountComponent } from './account/account.component';
 import { HttpClientModule } from '@angular/common/http';
 
+import { AdminComponent } from './admin/admin.component';
+
 
 @NgModule({
   declarations: [
@@ -16,8 +18,8 @@ import { HttpClientModule } from '@angular/common/http';
     LoginComponent,
     MenuComponent,
     AccountComponent,
+    AdminComponent,
    
-  
   ],
   imports: [
     FormsModule,

@@ -12,6 +12,7 @@ export class LoginComponent implements OnInit {
   
   username:string ='';
   password:string = '';
+  role: string = '';
   constructor(private router:Router,private http:HttpClient) { }
 
   ngOnInit() {
@@ -35,7 +36,6 @@ export class LoginComponent implements OnInit {
         alert("You must enter an email and a username!");
         return;
     } else if (typeof(Storage) !== "undefined") {
-
         const req =this.http.post('http://localhost:3000/api/auth', {
                 username: this.username,
                 password: this.password,
@@ -46,6 +46,7 @@ export class LoginComponent implements OnInit {
                         this.router.navigateByUrl('/account');
                         sessionStorage.setItem("username", data.username);
                         sessionStorage.setItem("password", data.password);
+                        sessionStorage.setItem("role", data.role);
                     } else {
                         alert('Username/Email incorrect!')
                     }
@@ -62,4 +63,3 @@ export class LoginComponent implements OnInit {
     }
 }
 }
-

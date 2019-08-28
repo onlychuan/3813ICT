@@ -1,0 +1,25 @@
+<h2>Admin Dashboard</h2>
+            <h3>User Options</h3>
+<div class="container login-container">
+            <div class="row">
+                <div class="col-md-6 login-form-1">
+                    <h3>Create User</h3>
+                    <form (submit)="createUser();" id="createUser">
+                        <div class="form-group">
+                            <input name="username" class="form-control" placeholder="Username.." [(ngModel)]='username'>
+
+                        </div>
+                        <div class="form-group">
+                            <input name="password" class="form-control"placeholder="password.." [(ngModel)]='password'>
+                        </div>
+                        <div>
+                        <select [(ngModel)]="role" name="role">
+                            <option value="user">User</option>
+                            <option value="groupAdmin">Group Admin</option>
+                            <option value="superAdmin">Super Admin</option>
+                          </select>
+                        </div><br>
+                        <button  class ="btn btn-danger" type="submit">Create</button>
+                       
+                       
+                    </form>
