@@ -10,12 +10,18 @@ import { HttpClient } from '@angular/common/http';
 export class AdminComponent implements OnInit {
 
 	constructor(private router: Router, private http: HttpClient) {}
+	addGgroupname: string = '';
 	username: string = '';
 	password: string = '';
+	groupname: string = '';
+	deletedGroup: string;
+	groups = [{}];
+	addGusername: string = '';
 	role: string = '';
-
-
+	deletedUser: string;
 	users = [{}];
+	
+
 	
 
   ngOnInit(): void {
@@ -50,34 +56,112 @@ export class AdminComponent implements OnInit {
 								this.role = '';
 								const req = this.http.post('http://localhost:3000/api/users', {})
 									.subscribe((data: any) => {
-											if (data.userData) {
+											
 												console.log('data', data.userData);
 												this.users = data.userData;
 												console.log('thisusers', this.users);
-											} else {
-												alert('Error!');
-												return;
-											}
 										},
-										err => {
-											alert('An error has occured trying to create user.')
-											console.log("Error occured");
-											return;
-										});
-							} else {
-								alert('Error!');
-								return;
-							}
+										);
+							} 
 						},
-						err => {
-							alert('An error has occured trying to create user.')
-							console.log("Error occured");
-							return;
-						});
+					);
 			}
 		}
 	}
 
+
+public deleteUser(deletedUser) {
+	if (sessionStorage.role == "superAdmin") {
+		if (deletedUser) {
+			event.preventDefault();
+			console.log(deletedUser);
+			const req = this.http.post('http://localhost:3000/api/del', {
+					username: this.deletedUser
+				})
+				.subscribe((data: any) => {
+						console.log(data);
+						console.log(data.success);
+						if (data.success) {
+							alert('User deleted successfully!');
+							this.deletedUser = '';
+							const req = this.http.post('http://localhost:3000/api/users', {})
+							.subscribe((data: any) => {
+								
+									console.log('data', data.userData);
+									this.users = data.userData;
+									console.log('thisusers', this.users);
+								
+							},
+							);
+				} 
+			},
+			);
+} 
+} 
+}
+
+
+public createGroup() {
+	// Function used to create group & post to backend API
+	event.preventDefault();
+	if (!this.groupname) {
+		alert("Group name field must not be blank!");
+	} else {
+		const req = this.http.post('http://localhost:3000/api/groupreg', {
+				groupname: this.groupname
+			})
+			.subscribe((data: any) => {
+					if (data.success) {
+						console.log(data);
+						alert('Group created successfully!');
+						this.groupname = '';
+						const req = this.http.post('http://localhost:3000/api/groups', {})
+							.subscribe((data: any) => {
+									
+										console.log('groupdata', data.groupData);
+										this.groups = data.groupData;
+										console.log('thisgroups', this.groups);
+									
+								},
+								);
+					} 
+				},
+			);
+	}
+}
+
+
+
+public deleteGroup(deletedGroup) {
+	// Deletes a user from the database
+	if (sessionStorage.role != "user") {
+		if (deletedGroup) {
+			event.preventDefault();
+			console.log(deletedGroup);
+			const req = this.http.post('http://localhost:3000/api/groupdel', {
+					groupname: this.deletedGroup
+				})
+				.subscribe((data: any) => {
+						console.log(data);
+						console.log(data.success);
+						if (data.success) {
+							alert('Group deleted successfully!');
+							this.deletedGroup = '';
+							const req = this.http.post('http://localhost:3000/api/groups', {})
+								.subscribe((data: any) => {
+										
+											console.log('data', data.groupData);
+											this.groups = data.groupData;
+											console.log('thisgroups', this.groups);
+										
+									},
+									);
+						} 
+					},
+					);
+		} 
+	} 
+}
 
 
 }

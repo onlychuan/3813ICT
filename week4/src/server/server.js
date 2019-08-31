@@ -60,8 +60,6 @@ server.listen(3000, () => {
         });
     });
 
-
-    // Route to manage user registration
 app.post('/api/reg', (req, res) => {
 	var isUser = 0;
 	var regUserObj;
@@ -120,6 +118,141 @@ app.post('/api/users', (req, res) => {
 			res.send({
 				userData
 			});
+		}
+	});
+});
+
+app.post('/api/del', (req, res) => {
+	var delUname = req.body.username;
+	var isUser = 0;
+	var delUserObj;
+	console.log(delUname)
+
+	fs.readFile('userdata.json', 'utf-8', function(err, data) {
+		if (err) {
+			console.log(err);
+		} else {
+			delUserObj = JSON.parse(data);
+
+			for (let l = 0; l < delUserObj.length; l++) {
+				if (delUserObj[l].username == delUname) {
+					isUser = 1;
+					delete delUserObj[l].username;
+					delete delUserObj[l].password;
+					delete delUserObj[l].role;
+					break;
+				}
+			}
+
+			if (!isUser) {
+				console.log(req.body);
+				res.send({
+					'success': false
+				});
+			} else {
+				var rawdeldata = delUserObj.filter(o => Object.keys(o).length);
+				var newdeldata = JSON.stringify(rawdeldata);
+				fs.writeFile('userdata.json', newdeldata, 'utf-8', function(err) {
+					if (err) throw err;
+					res.send({
+						'username': delUname,
+						'success': true
+					});
+				});
+			}
+		}
+	});
+});
+
+
+app.post('/api/groups', (req, res) => {
+	fs.readFile('groupdata.json', 'utf-8', function(err, data) {
+		if (err) {
+			console.log(err);
+		} else {
+			var groupData = JSON.parse(data);
+			res.send({
+				groupData
+			});
+		}
+	});
+});
+
+app.post('/api/groupreg', (req, res) => {
+	var isGroup = 0;
+	var regGroupObj;
+	var regGname = req.body.groupname;
+	console.log(regGname);
+	fs.readFile('groupdata.json', 'utf-8', function(err, data) {
+		if (err) { 
+			console.log(err);
+		} else {
+			regGroupObj = JSON.parse(data);
+
+			for (let f = 0; f < regGroupObj.length; f++) {
+				if (regGroupObj[f].name == regGname) {
+					isGroup = 1;
+				}
+			}
+			if (isGroup > 0) {
+				console.log(req.body);
+				res.send({
+					'name': '',
+					'success': false
+				});
+			} else {
+				regGroupObj.push({
+					'name': regGname
+				})
+				var newGroupData = JSON.stringify(regGroupObj);
+				fs.writeFile('groupdata.json', newGroupData, 'utf-8', function(err) {
+					if (err) throw err;
+					res.send({
+						'groupname': regGname,
+						'success': true
+					});
+				});
+			}
+		}
+	});
+});
+
+
+app.post('/api/groupdel', (req, res) => {
+	var delGname = req.body.groupname;
+	var isGroup = 0;
+	var delGroupObj;
+	console.log('delGname', delGname)
+
+	fs.readFile('groupdata.json', 'utf-8', function(err, data) {
+		if (err) {
+			console.log(err);
+		} else {
+			delGroupObj = JSON.parse(data);
+
+			for (let z = 0; z < delGroupObj.length; z++) {
+				if (delGroupObj[z].name == delGname) {
+					isGroup = 1;
+					delete delGroupObj[z].name;
+					break;
+				}
+			}
+			if (!isGroup) {
+				console.log('reqbody', req.body);
+				res.send({
+					'success': false
+				});
+			} else {
+				var rawGdeldata = delGroupObj.filter(a => Object.keys(a).length);
+				var newGdeldata = JSON.stringify(rawGdeldata);
+				fs.writeFile('groupdata.json', newGdeldata, 'utf-8', function(err) {
+					if (err) throw err;
+					res.send({
+						'groupname': delGname,
+						'success': true
+					});
+				});
+			}
 		}
 	});
 });
